@@ -1,10 +1,9 @@
-import { ADD_LOGIN } from '../actions';
+import { ADD_EMAIL } from '../actions';
 
 // Esse reducer será responsável por tratar as informações da pessoa usuária
 const INITIAL_STATE = {
   user: {
     email: '', // string que armazena o email da pessoa usuária
-    password: '',
   },
   wallet: {
     currencies: [], // array de string
@@ -16,9 +15,9 @@ const INITIAL_STATE = {
 
 const user = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case ADD_LOGIN:
+  case ADD_EMAIL:
     return {
-      ...state, login: { ...action.payload },
+      ...state, user: { ...action.payload },
     };
   default:
     return state;

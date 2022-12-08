@@ -1,6 +1,7 @@
+import PropTypes from "prop-types"
 import React from 'react';
 import { connect } from 'react-redux';
-import { addLogin } from '../redux/actions/index';
+import { addEmail } from '../redux/actions/index';
 
 class Login extends React.Component {
   state = {
@@ -11,24 +12,31 @@ class Login extends React.Component {
 
   handleChange = ({ target }) => {
     const { name, value } = target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value }, this.validation());
   };
 
   validation = () => {
     const { email, password } = this.state;
-    const validation = /^([a-z]){1,}([a-z0-9._-]){1,}([@]){1}([a-z]){2,}([.]){1}([a-z]){2,}([.]?){1}([a-z]?){2,}$/i && password.length > 5;
-    return validation;
+    const regex = /\S+@\S+\.\S+/;
+    const LENGTH_PASSWORD_MIN = 6;
+    const validation = regex.test(email) && password.length >= LENGTH_PASSWORD_MIN;
+    if (validation === true) {
+      this.setState({ validation: true });
+    } else {
+      this.setState({ validation: false });
+    }
   };
 
   handleSubmit = () => {
     const { dispatch, history } = this.props;
-    dispatch(addLogin({ ...this.state }));
+    const { email } = this.state;
+    dispatch(addEmail({ email }));
     history.push('/carteira');
   };
 
   render() {
     // const { email, password } = this.props;
-    const { email, password } = this.state;
+    const { email, password, validation } = this.state;
     return (
       <div>
         <form>
@@ -47,6 +55,7 @@ class Login extends React.Component {
             onChange={ this.handleChange }
           />
           <button
+            disabled={ !validation }
             type="button"
             onClick={ this.handleSubmit }
           >
@@ -58,9 +67,11 @@ class Login extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  email: state.user.user.email,
-  password: state.user.user.password,
-});
+Login.propTypes = {
+  dispatch: PropTypes.func,
+  history: PropTypes.shape({
+    push: PropTypes.func
+  })
+}
 
-export default connect(mapStateToProps)(Login);
+export default connect()(Login);
