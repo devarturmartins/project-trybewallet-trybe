@@ -1,12 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Header from '../components/Header';
+import WalletForm from '../components/WalletForm';
+import { fetchApiCurrency } from '../redux/actions';
 
 class Wallet extends React.Component {
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(fetchApiCurrency());
+  }
+
   render() {
     return (
-      <Header />
+      <div>
+        <Header />
+        <WalletForm />
+      </div>
     );
   }
 }
 
-export default Wallet;
+export default connect()(Wallet);
