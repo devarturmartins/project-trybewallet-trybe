@@ -1,4 +1,4 @@
-import PropTypes from "prop-types"
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { addEmail } from '../redux/actions/index';
@@ -12,15 +12,17 @@ class Login extends React.Component {
 
   handleChange = ({ target }) => {
     const { name, value } = target;
-    this.setState({ [name]: value }, this.validation());
+    this.setState({ [name]: value }, () => this.validation());
   };
 
   validation = () => {
     const { email, password } = this.state;
     const regex = /\S+@\S+\.\S+/;
-    const LENGTH_PASSWORD_MIN = 6;
-    const validation = regex.test(email) && password.length >= LENGTH_PASSWORD_MIN;
-    if (validation === true) {
+    const LENGTH_PASSWORD_MIN = 5;
+    const validationEmail = regex.test(email);
+    const validationPassword = password.length > LENGTH_PASSWORD_MIN;
+    console.log(validationEmail && validationPassword);
+    if (validationEmail === true && validationPassword === true) {
       this.setState({ validation: true });
     } else {
       this.setState({ validation: false });
@@ -30,7 +32,7 @@ class Login extends React.Component {
   handleSubmit = () => {
     const { dispatch, history } = this.props;
     const { email } = this.state;
-    dispatch(addEmail({ email }));
+    dispatch(addEmail(email));
     history.push('/carteira');
   };
 
@@ -68,10 +70,10 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-  dispatch: PropTypes.func,
+  dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
-    push: PropTypes.func
-  })
-}
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default connect()(Login);
