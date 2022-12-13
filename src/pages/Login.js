@@ -34,6 +34,7 @@ class Login extends React.Component {
     const { email } = this.state;
     dispatch(addEmail(email));
     history.push('/carteira');
+    // dispatch(fetchApiCurrency());
   };
 
   render() {

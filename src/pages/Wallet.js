@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
@@ -19,5 +20,9 @@ class Wallet extends React.Component {
     );
   }
 }
+
+Wallet.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
 
 export default connect()(Wallet);
