@@ -4,6 +4,7 @@ import { fetchApi } from '../../services/fetchApi';
 export const ADD_EMAIL = 'ADD_EMAIL';
 export const CURRENCIES = 'CURRENCIES';
 export const REQUEST_STARTED = 'REQUEST_STARTED';
+export const EXPENSES = 'EXPENSES';
 
 export const addEmail = (email) => ({
   type: ADD_EMAIL,
@@ -12,6 +13,13 @@ export const addEmail = (email) => ({
 
 const requestStarted = () => ({
   type: REQUEST_STARTED,
+});
+
+export const expenses = (expensesInfo) => ({
+  type: EXPENSES,
+  payload: {
+    expensesInfo,
+  },
 });
 
 const currencies = (currenciesInfo) => ({

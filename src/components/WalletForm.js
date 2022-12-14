@@ -1,13 +1,21 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { expenses } from '../redux/actions';
+import { fetchApi } from '../services/fetchApi';
 
 class WalletForm extends Component {
   state = {
+    id: -1,
     currency: 'USD',
-    pay: 'Dinheiro',
-    tipoDespesa: 'Alimentação',
+    method: 'Dinheiro',
+    tag: 'Alimentação',
+    exchangeRates: {},
   };
+
+  // componentDidMount() {
+  //   this.fetchApi();
+  // }
 
   onInputChange = ({ target }) => {
     const { name, value } = target;
@@ -16,10 +24,18 @@ class WalletForm extends Component {
     });
   };
 
-  handleSubmit = () => {
-    const { dispatch, history } = this.props;
-    dispatch(action({ ...this.state }));
-    history.push('/professionalform');
+  handleSubmit = async () => {
+    const { dispatch } = this.props;
+    const request = await fetchApi();
+    console.log(request);
+    this.setState({ exchangeRates: request }, () => {
+      dispatch(expenses({ ...this.state }));
+    });
+    this.setState((prev) => ({
+      id: prev.id + 1,
+    }));
+    document.querySelector('input').value = '';
+    document.querySelector('textarea').value = '';
   };
 
   render() {
@@ -34,7 +50,7 @@ class WalletForm extends Component {
                 <label htmlFor="despesas">
                   <input
                     onChange={ this.onInputChange }
-                    name="despesas"
+                    name="value"
                     id="despesas"
                     type="text"
                     data-testid="value-input"
@@ -72,7 +88,7 @@ class WalletForm extends Component {
                     onChange={ this.onInputChange }
                     data-testid="method-input"
                     id="pay"
-                    name="pay"
+                    name="method"
                     value={ pay }
                   >
                     <option value="Dinheiro">Dinheiro</option>
@@ -84,7 +100,7 @@ class WalletForm extends Component {
                 <label htmlFor="tipoDespesa">
                   <select
                     onChange={ this.onInputChange }
-                    name="tipoDespesa"
+                    name="tag"
                     id="tipoDespesa"
                     data-testid="tag-input"
                     value={ tipoDespesa }
@@ -111,9 +127,8 @@ class WalletForm extends Component {
 }
 
 WalletForm.propTypes = {
-  currencies: PropTypes.shape({
-    map: PropTypes.func.isRequired,
-  }).isRequired,
+  currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
+  dispatch: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
 };
 
