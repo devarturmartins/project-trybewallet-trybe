@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { expenses } from '../redux/actions';
+import { expenses, attExpenses } from '../redux/actions';
 import { fetchApi } from '../services/fetchApi';
 
 class WalletForm extends Component {
@@ -25,21 +25,28 @@ class WalletForm extends Component {
   };
 
   handleSubmit = async () => {
-    const { dispatch } = this.props;
-    const request = await fetchApi();
-    console.log(request);
-    this.setState({ exchangeRates: request }, () => {
-      dispatch(expenses({ ...this.state }));
-    });
-    this.setState((prev) => ({
-      id: prev.id + 1,
-    }));
-    document.querySelector('input').value = '';
-    document.querySelector('textarea').value = '';
+    const { dispatch, editor, idToEdit, expenses } = this.props;
+    if (editor) {
+      const request = await fetchApi();
+      this.setState({ exchangeRates: request }, () => {
+        dispatch(attExpenses({ ...this.state, id: idToEdit }));
+      });
+    } else {
+      const request = await fetchApi();
+      console.log(request);
+      this.setState({ exchangeRates: request }, () => {
+        dispatch(expenses({ ...this.state }));
+      });
+      this.setState((prev) => ({
+        id: prev.id + 1,
+      }));
+      document.querySelector('input').value = '';
+      document.querySelector('textarea').value = '';
+    }
   };
 
   render() {
-    const { currencies, isFetching } = this.props;
+    const { currencies, isFetching, editor } = this.props;
     const { currency, pay, tipoDespesa } = this.state;
     return (
       <div>
@@ -116,7 +123,9 @@ class WalletForm extends Component {
                   type="button"
                   onClick={ this.handleSubmit }
                 >
-                  Adicionar despesa
+                  {
+                    editor ? 'Editar despesa' : 'Adicionar despesa'
+                  }
                 </button>
               </form>
             )
@@ -130,11 +139,15 @@ WalletForm.propTypes = {
   currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
   dispatch: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  editor: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   currencies: state.wallet.currencies,
   isFetching: state.wallet.isFetching,
+  editor: state.wallet.editor,
+  idToEdit: state.wallet.idToEdit,
+  expenses: state.wallet.expenses,
 });
 
 export default connect(mapStateToProps)(WalletForm);

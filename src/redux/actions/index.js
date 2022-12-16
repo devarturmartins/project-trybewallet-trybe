@@ -6,6 +6,8 @@ export const CURRENCIES = 'CURRENCIES';
 export const REQUEST_STARTED = 'REQUEST_STARTED';
 export const EXPENSES = 'EXPENSES';
 export const REMOVE_EXPENSES = 'REMOVE_EXPENSES';
+export const EDIT_EXPENSES = 'EDIT_EXPENSES';
+export const ATT_EXPENSES = 'ATT_EXPENSES';
 
 export const addEmail = (email) => ({
   type: ADD_EMAIL,
@@ -34,6 +36,18 @@ export const removeExpenses = (removeExpensesInfo) => ({
   type: REMOVE_EXPENSES,
   payload: {
     removeExpensesInfo,
+  },
+});
+
+export const expensesEdit = (id) => ({
+  type: EDIT_EXPENSES,
+  id,
+});
+
+export const attExpenses = (expensesAttInfo) => ({
+  type: ATT_EXPENSES,
+  payload: {
+    expensesAttInfo,
   },
 });
 
