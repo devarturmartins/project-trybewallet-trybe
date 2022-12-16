@@ -5,6 +5,7 @@ export const ADD_EMAIL = 'ADD_EMAIL';
 export const CURRENCIES = 'CURRENCIES';
 export const REQUEST_STARTED = 'REQUEST_STARTED';
 export const EXPENSES = 'EXPENSES';
+export const REMOVE_EXPENSES = 'REMOVE_EXPENSES';
 
 export const addEmail = (email) => ({
   type: ADD_EMAIL,
@@ -26,6 +27,13 @@ const currencies = (currenciesInfo) => ({
   type: CURRENCIES,
   payload: {
     currenciesInfo,
+  },
+});
+
+export const removeExpenses = (removeExpensesInfo) => ({
+  type: REMOVE_EXPENSES,
+  payload: {
+    removeExpensesInfo,
   },
 });
 
